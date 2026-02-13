@@ -4,14 +4,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
 
-// 1. Esquema de validación con Zod para los parámetros de la URL
+// Esquema de validación con Zod para los parámetros de la URL
 const searchParamsSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   search: z.string().max(100).optional(),
   min_days: z.coerce.number().int().min(0).optional(),
 });
 
-// 2. Mapeo de vistas (Whitelist para seguridad)
+// Mapeo de vistas
 const REPORT_MAP: Record<string, { view: string; title: string }> = {
   '1': { view: 'vw_most_borrowed_books', title: 'Libros más prestados' },
   '2': { view: 'vw_overdue_loans', title: 'Préstamos Vencidos' },
@@ -32,7 +32,6 @@ export default async function ReportPage({
 
   if (!config) return notFound();
 
-  // 3. Validar los parámetros entrantes con Zod
   const rawParams = await searchParams;
   const parsed = searchParamsSchema.safeParse(rawParams);
   
@@ -44,30 +43,25 @@ export default async function ReportPage({
   const limit = 10;
   const offset = (page - 1) * limit;
 
-  // 4. Construcción segura de la consulta SQL (Parametrizada)
   let sql = `SELECT * FROM ${config.view}`;
   const sqlParams: (string | number)[] = [];
   let paramCounter = 1;
 
-  // Filtro específico para Reporte 1 (Búsqueda por título o autor)
   if (id === '1' && search) {
     sql += ` WHERE title ILIKE $${paramCounter} OR author ILIKE $${paramCounter}`;
     sqlParams.push(`%${search}%`);
     paramCounter++;
   }
 
-  // Filtro específico para Reporte 2 (Días de atraso mínimos)
   if (id === '2' && min_days !== undefined) {
     sql += ` WHERE days_overdue >= $${paramCounter}`;
     sqlParams.push(min_days);
     paramCounter++;
   }
 
-  // Paginación (Se aplica a todos)
   sql += ` LIMIT $${paramCounter} OFFSET $${paramCounter + 1}`;
   sqlParams.push(limit, offset);
 
-  // Ejecutar consulta
   const result = await query(sql, sqlParams);
   const rows = result.rows;
   const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
