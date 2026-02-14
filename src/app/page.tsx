@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 export default function Home() {
   const reports = [
-    { id: 1, title: "Libros Más Prestados", desc: "Ranking general. (Soporta búsqueda y paginación)" },
-    { id: 2, title: "Préstamos Vencidos", desc: "Atrasos y multas calculadas. (Filtro por días y paginación)" },
+    { id: 1, title: "Libros Más Prestados", desc: "Ranking general." },
+    { id: 2, title: "Préstamos Vencidos", desc: "Atrasos y multas calculadas." },
     { id: 3, title: "Resumen de Multas", desc: "Ingresos mensuales por multas cobradas y pendientes." },
     { id: 4, title: "Actividad de Socios", desc: "Usuarios activos y su tasa de morosidad." },
     { id: 5, title: "Salud del Inventario", desc: "Estado físico de las copias por categoría." },

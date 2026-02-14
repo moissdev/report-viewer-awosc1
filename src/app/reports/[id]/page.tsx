@@ -79,7 +79,7 @@ export default async function ReportPage({
         <form className="mb-6 p-4 bg-white rounded-lg shadow-sm border border-slate-200 flex gap-4 items-end">
           {id === '1' && (
             <div>
-              <label className="block text-sm text-slate-600 mb-1">Buscar por título/autor</label>
+              <label className="block text-sm text-slate-600 mb-1">Buscar por título o autor</label>
               <input 
                 type="text" 
                 name="search" 
